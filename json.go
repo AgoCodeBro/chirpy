@@ -1,8 +1,8 @@
 package main
 
 import (
-	"log"
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -12,10 +12,10 @@ func respondWithError(w http.ResponseWriter, code int, msg string, err error) {
 	}
 
 	type errStruct struct {
-		err  string `json:"error"` 
+		err string `json:"error"`
 	}
-	
-	e := errStruct{err : msg}
+
+	e := errStruct{err: msg}
 
 	respondWithJson(w, code, e)
 }

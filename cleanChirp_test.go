@@ -11,17 +11,17 @@ func TestCleanChrip(t *testing.T) {
 	}
 
 	tests := []test{
-		test {
-			Input : "Hello there",
-			Want  : "Hello there",
+		test{
+			Input: "Hello there",
+			Want:  "Hello there",
 		},
-		test {
-			Input : "Kerfuffle This fornax and ShaRbeRt",
-			Want  : "**** This **** and ****",
+		test{
+			Input: "Kerfuffle This fornax and ShaRbeRt",
+			Want:  "**** This **** and ****",
 		},
-		test {
-			Input : "Kerfuffle!",
-			Want  : "Kerfuffle!",
+		test{
+			Input: "Kerfuffle!",
+			Want:  "Kerfuffle!",
 		},
 	}
 
