@@ -43,12 +43,13 @@ func main() {
 	mux.Handle("POST /api/chirps", http.HandlerFunc(cfg.chirpHandler))
 	mux.Handle("POST /api/users", http.HandlerFunc(cfg.createUserHandler))
 	mux.Handle("PUT /api/users", http.HandlerFunc(cfg.changeCredentialsHandler))
-	mux.Handle("GET /api/chirps", http.HandlerFunc(cfg.getAllChirps))
+	mux.Handle("GET /api/chirps", http.HandlerFunc(cfg.getChirps))
 	mux.Handle("GET /api/chirps/{chirpID}", http.HandlerFunc(cfg.getChirp))
 	mux.Handle("DELETE /api/chirps/{chirpID}", http.HandlerFunc(cfg.deleteChirp))
 	mux.Handle("POST /api/login", http.HandlerFunc(cfg.loginHandler))
 	mux.Handle("POST /api/refresh", http.HandlerFunc(cfg.refreshHandler))
 	mux.Handle("POST /api/revoke", http.HandlerFunc(cfg.revokeHandler))
+	mux.Handle("POST /api/polka/webhooks", http.HandlerFunc(cfg.polkaWebhookHandler))
 
 	srv := &http.Server{
 		Addr:    port,

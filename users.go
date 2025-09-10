@@ -11,10 +11,11 @@ import (
 )
 
 type jsonUser struct {
-	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Email     string    `json:"email"`
+	ID          uuid.UUID `json:"id"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	Email       string    `json:"email"`
+	IsChirpyRed bool      `json:"is_chirpy_red"`
 }
 
 func (c *apiConfig) createUserHandler(w http.ResponseWriter, req *http.Request) {
@@ -49,10 +50,11 @@ func (c *apiConfig) createUserHandler(w http.ResponseWriter, req *http.Request) 
 	}
 
 	jsonableResult := jsonUser{
-		ID:        result.ID,
-		CreatedAt: result.CreatedAt,
-		UpdatedAt: result.UpdatedAt,
-		Email:     result.Email,
+		ID:          result.ID,
+		CreatedAt:   result.CreatedAt,
+		UpdatedAt:   result.UpdatedAt,
+		Email:       result.Email,
+		IsChirpyRed: result.IsChirpyRed,
 	}
 
 	respondWithJson(w, 201, jsonableResult)

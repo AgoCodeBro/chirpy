@@ -1,8 +1,8 @@
 package main
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
 
 	"github.com/AgoCodeBro/chirpy/internal/auth"
 	"github.com/AgoCodeBro/chirpy/internal/database"
@@ -53,10 +53,11 @@ func (cfg *apiConfig) changeCredentialsHandler(w http.ResponseWriter, req *http.
 	}
 
 	jsonableUser := jsonUser{
-		ID:             returnedUser.ID,
-		CreatedAt:      returnedUser.CreatedAt,
-		UpdatedAt:      returnedUser.UpdatedAt,
-		Email:          returnedUser.Email,
+		ID:          returnedUser.ID,
+		CreatedAt:   returnedUser.CreatedAt,
+		UpdatedAt:   returnedUser.UpdatedAt,
+		Email:       returnedUser.Email,
+		IsChirpyRed: returnedUser.IsChirpyRed,
 	}
 
 	respondWithJson(w, 200, jsonableUser)

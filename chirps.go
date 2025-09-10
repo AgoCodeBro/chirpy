@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"sort"
 	"strings"
 	"time"
 
@@ -89,15 +90,23 @@ func cleanChirpBody(msg string) string {
 	return msg
 }
 
-func (cfg *apiConfig) getAllChirps(w http.ResponseWriter, req *http.Request) {
-	result, err := cfg.db.GetAllChirps(req.Context())
-	if err != nil {
-		respondWithError(w, 500, "Failed to get chirps", err)
-		return
+func (cfg *apiConfig) getChirps(w http.ResponseWriter, req *http.Request) {
+	authorId := req.URL.Query().Get("author_id")
+	var chirps []database.Chirp
+	if authorId != "" {
+		id, err := uuid.Parse(authorId)
+		if err != nil {
+			respondWithError(w, 500, "failed to parse id", err)
+			return
+		}
+
+		chirps = cfg.getChirpsByAuthor(w, req, id)
+	} else {
+		chirps = cfg.getAllChirps(w, req)
 	}
 
-	jsonableChirps := make([]jsonableChirpStruct, len(result))
-	for i, resultChirp := range result {
+	jsonableChirps := make([]jsonableChirpStruct, len(chirps))
+	for i, resultChirp := range chirps {
 		jsonableChirps[i] = jsonableChirpStruct{
 			ID:        resultChirp.ID,
 			CreatedAt: resultChirp.CreatedAt,
@@ -105,10 +114,34 @@ func (cfg *apiConfig) getAllChirps(w http.ResponseWriter, req *http.Request) {
 			Body:      resultChirp.Body,
 			UserID:    resultChirp.UserID,
 		}
+	}
 
+	sortVar := req.URL.Query().Get("sort")
+	if sortVar == "desc" {
+		sort.Slice(jsonableChirps, func(i, j int) bool { return jsonableChirps[j].CreatedAt.Before(jsonableChirps[i].CreatedAt) })
 	}
 
 	respondWithJson(w, 200, jsonableChirps)
+}
+
+func (cfg *apiConfig) getChirpsByAuthor(w http.ResponseWriter, req *http.Request, authorId uuid.UUID) []database.Chirp {
+	result, err := cfg.db.GetAllChirpsByUser(req.Context(), authorId)
+	if err != nil {
+		respondWithError(w, 500, "failed to get chirps", err)
+		return nil
+	}
+
+	return result
+}
+
+func (cfg *apiConfig) getAllChirps(w http.ResponseWriter, req *http.Request) []database.Chirp {
+	result, err := cfg.db.GetAllChirps(req.Context())
+	if err != nil {
+		respondWithError(w, 500, "Failed to get chirps", err)
+		return nil
+	}
+
+	return result
 }
 
 func (cfg *apiConfig) getChirp(w http.ResponseWriter, req *http.Request) {

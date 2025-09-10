@@ -75,5 +75,23 @@ func GetBearerToken(headers http.Header) (string, error) {
 	}
 
 	splitAuthString := strings.Fields(authString)
+	if len(splitAuthString) < 2 || splitAuthString[0] != "Bearer" {
+		return "", fmt.Errorf("malformed auth header")
+	}
+
+	return splitAuthString[1], nil
+}
+
+func GetAPIKey(headers http.Header) (string, error) {
+	authString := headers.Get("Authorization")
+	if len(authString) == 0 {
+		return "", fmt.Errorf("failed to find authorization header")
+	}
+
+	splitAuthString := strings.Fields(authString)
+	if len(splitAuthString) < 2 || splitAuthString[0] != "ApiKey" {
+		return "", fmt.Errorf("malformed auth header")
+	}
+
 	return splitAuthString[1], nil
 }

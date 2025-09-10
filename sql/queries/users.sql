@@ -14,7 +14,7 @@ DELETE FROM users;
 
 
 -- name: GetUser :one
-SELECT id, created_at, updated_at, email, hashed_password
+SELECT id, created_at, updated_at, email, hashed_password, is_chirpy_red
 FROM users
 WHERE email = $1;
 
@@ -25,3 +25,7 @@ SET updated_at = NOW(), email = $1, hashed_password = $2
 WHERE id = $3
 RETURNING *;
 
+-- name: UpgradeUser :exec
+UPDATE users
+SET is_chirpy_red = true, updated_at = NOW()
+WHERE id = $1;
